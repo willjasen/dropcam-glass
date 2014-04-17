@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get "/auth/:provider/callback" => "sessions#create"
   delete "/signout" => "sessions#destroy", as: :signout
-
+  post "/send_message" => "timeline#send_message", as: :send_message
   root "timeline#index"
 
   # The priority is based upon order of creation: first created -> highest priority.

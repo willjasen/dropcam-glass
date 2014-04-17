@@ -42,7 +42,7 @@ gem 'spring',        group: :development
 gem 'bootstrap-sass'
 
 # Google
-gem 'google-api-client'
+gem 'google-api-client', :require => 'google/api_client'
 gem 'omniauth-google-oauth2', :git => 'https://github.com/zquestz/omniauth-google-oauth2.git'
 
 # Use figaro
