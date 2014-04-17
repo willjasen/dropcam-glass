@@ -1,0 +1,19 @@
+<%= render :partial => "navigation" %>
+
+<% if flash[:notice] %>
+ <div class="alert alert-success">
+ <button type="button" class="close" data-dismiss="alert">&times;</button>
+ <%= flash[:notice] %>
+ </div>
+<% elsif flash[:alert] %>
+ <div class="alert alert-error">
+ <button type="button" class="close" data-dismiss="alert">&times;</button>
+ <%= flash[:alert] %>
+ </div>
+<% end %>
+
+<% if current_user %>
+  <% link_to 'Send Message to Glass', send_message_path, method: :post, class: "btn btn-primary" %>
+<% end %>
+
+
