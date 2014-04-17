@@ -13,7 +13,7 @@
 <% end %>
 
 <% if current_user %>
-  <% link_to 'Send Message to Glass', send_message_path, method: :post, class: "btn btn-primary" %>
+  <%= link_to 'Send Message to Glass', send_message_path, method: :post, class: "btn btn-primary" %>
 <% end %>
 
 

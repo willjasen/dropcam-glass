@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   get "/auth/:provider/callback" => "sessions#create"
   delete "/signout" => "sessions#destroy", as: :signout
   post "/send_message" => "timeline#send_message", as: :send_message
+  post "/send_dropcam_picture" => "timeline#send_dropcam_picture", as: :send_dropcam_picture
   root "timeline#index"
 
   # The priority is based upon order of creation: first created -> highest priority.

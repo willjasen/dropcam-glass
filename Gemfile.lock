@@ -51,6 +51,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    dropcam (0.0.4)
     erubis (2.7.0)
     execjs (2.0.2)
     extlib (0.9.16)
@@ -177,6 +178,7 @@ PLATFORMS
 DEPENDENCIES
   bootstrap-sass
   coffee-rails (~> 4.0.0)
+  dropcam
   figaro
   google-api-client
   jbuilder (~> 2.0)
