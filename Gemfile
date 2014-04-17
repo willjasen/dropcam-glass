@@ -49,3 +49,6 @@ gem 'omniauth-google-oauth2', :git => 'https://github.com/zquestz/omniauth-googl
 gem 'figaro'
 gem 'rest-client'
 
+# Use dropcam gem
+gem 'dropcam'
+
