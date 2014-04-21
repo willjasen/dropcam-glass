@@ -84,7 +84,8 @@ settings["watermark.enabled"].set(false)
       text: camera.title + ' Dropcam',
       notification: { level: 'DEFAULT' },
       menuItems: [
-        { action: 'DELETE' } ]
+        { action: 'DELETE' },
+	{ action: 'TOGGLE_PINNED' } ]
       },
       "#{camera.title}.jpg",
       "image/jpeg")
