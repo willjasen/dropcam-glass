@@ -95,6 +95,11 @@ settings["watermark.enabled"].set(false)
     else
       redirect_to(root_path, :alert => "Timelines failed to insert. Please try again.")
     end
+
+    if File.exist?("#{camera.title}.jpg")
+      File.delete("#{camera.title}.jpg")
+    end
+    
   else
     Rails.logger.debug "No access token"
   end
