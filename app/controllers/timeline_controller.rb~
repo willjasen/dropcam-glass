@@ -81,10 +81,11 @@ settings["watermark.enabled"].set(false)
     @mirror = @client.discovered_api('mirror', 'v1')
 
     insert_timeline_item( {
-      text: camera.description + ' Dropcam',
+      text: camera.title + ' Dropcam',
       notification: { level: 'DEFAULT' },
       menuItems: [
-        { action: 'DELETE' } ]
+        { action: 'DELETE' },
+	{ action: 'TOGGLE_PINNED' } ]
       },
       "#{camera.title}.jpg",
       "image/jpeg")
