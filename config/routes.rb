@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   delete "/signout" => "sessions#destroy", as: :signout
   post "/send_message" => "timeline#send_message", as: :send_message
   post "/send_dropcam_picture" => "timeline#send_dropcam_picture", as: :send_dropcam_picture
+  post "/update_dropcam_card" => "timeline#update_dropcam_card", as: :update_dropcam_card
   root "timeline#index"
 
   # The priority is based upon order of creation: first created -> highest priority.
