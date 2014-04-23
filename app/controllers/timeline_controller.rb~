@@ -111,6 +111,7 @@ class TimelineController < ApplicationController
 					},
         	{ action: 'DELETE' },
 					{ action: 'TOGGLE_PINNED' } ]
+      	},
 				},
       dropcam_info[:filename],
       "image/jpeg")
