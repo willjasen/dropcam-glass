@@ -17,6 +17,7 @@
 
 # Ignore application configuration
 /config/application.yml
+/config/initializers/omniauth.rb
 
 # Ignore temporary files
 /*~
