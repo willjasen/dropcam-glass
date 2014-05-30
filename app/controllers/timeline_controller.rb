@@ -19,6 +19,7 @@ class TimelineController < ApplicationController
   	if @response["access_token"].present?
     	credentials[:access_token] = @response["access_token"]
 
+			puts 'Creating client for insert'
     	@client = Google::APIClient.new
    		hash = { :access_token => credentials[:access_token], :refresh_token => credentials[:refresh_token] }
     	authorization = Signet::OAuth2::Client.new(hash)
@@ -44,7 +45,7 @@ class TimelineController < ApplicationController
     	insert_timeline_item( {
       	text: dropcam_info[:title] + " Dropcam",
       	notification: { level: 'DEFAULT' },
-      	sourceItemId: 1001,
+      	sourceItemId: '1001',
       	menuItems: [
         	{ 
 						action: 'CUSTOM',
@@ -90,6 +91,7 @@ class TimelineController < ApplicationController
 		dropcam_info = get_dropcam_info
 
 		credentials = User.get_credentials(params[:userToken])
+    timelineID = params[:itemId]
 
   	data = {
    		:client_id => ENV["GLASS_CLIENT_ID"],
@@ -103,16 +105,18 @@ class TimelineController < ApplicationController
     	credentials[:access_token] = @response["access_token"]
 
     	@client = Google::APIClient.new
-			hash = { :access_token => credentials[:access_token], :refresh_token => credentials[:refresh_token] }
-    	authorization = Signet::OAuth2::Client.new(hash)
+			hash = { :access_token => credentials[:access_token], :refresh_token => credentials[:refresh_token] }   	
+			authorization = Signet::OAuth2::Client.new(hash)
     	@client.authorization = authorization
 
+			puts 'Mirror creating..'
     	@mirror = @client.discovered_api('mirror', 'v1')
+			puts 'Mirror created'
     
     	update_timeline_item( {
       	text: dropcam_info[:title] + " Dropcam",
       	notification: { level: 'DEFAULT' },
-      	sourceItemId: 1001,
+      	sourceItemId: '1001',
       	menuItems: [
         	{ 
 						action: 'CUSTOM',
@@ -135,6 +139,7 @@ class TimelineController < ApplicationController
         	{ action: 'DELETE' },
 					{ action: 'TOGGLE_PINNED' } ]
       	},
+				timelineID,
 				dropcam_info[:filename],
 				"image/jpeg"
 				)
@@ -150,11 +155,11 @@ class TimelineController < ApplicationController
   def get_dropcam_info
 		require 'dropcam'
   	dropcam = Dropcam::Dropcam.new(ENV["DROPCAM_USERNAME"],ENV["DROPCAM_PASSWORD"])
-  	camera = dropcam.cameras.second
+  	camera = dropcam.cameras.third
 
 		# returns jpg image data of the latest frame captured
 		screenshot = camera.screenshot.current
-		filename = "#{camera.title}.jpg"
+		filename = "app/assets/images/#{camera.title}.jpg"
 
 		# write data to disk
 		File.open(filename, 'wb') {|f| f.write(screenshot) }
@@ -166,7 +171,6 @@ class TimelineController < ApplicationController
 
 	  return {filename: filename, title: camera.title}
 	end
-
 
 	def insert_timeline_item(timeline_item, attachment_path = nil, content_type = nil)
  		method = @mirror.timeline.insert
@@ -187,12 +191,13 @@ class TimelineController < ApplicationController
  		@result = @client.execute!(
  			api_method: method,
  			body_object: timeline_item,
- 			#media: media,
- 			#parameters: parameters
+ 			media: media,
+ 			parameters: parameters
  		).data
+
  	end
 
-  def update_timeline_item(timeline_item, attachment_path = nil, content_type = nil)
+  def update_timeline_item(timeline_item, timelineID, attachment_path = nil, content_type = nil)
 		method = @mirror.timeline.update
 
 		# If a Hash was passed in, create an actual timeline item from it.
@@ -202,11 +207,11 @@ class TimelineController < ApplicationController
 
  		if attachment_path && content_type
  			media = Google::APIClient::UploadIO.new(attachment_path, content_type)
- 			parameters = { 'uploadType' => 'multipart', 'id' => '1001' }
  		else
  			media = nil
- 			parameters = nil
  		end
+
+		parameters = { 'id' => timelineID, 'uploadType' => 'multipart' }
 
  		@result = @client.execute!(
  			api_method: method,
@@ -214,8 +219,8 @@ class TimelineController < ApplicationController
  			media: media,
  			parameters: parameters
  		).data
-	end
 
+	end
 
 	def insert_subscription(timeline_item, attachment_path = nil, content_type = nil)
  		method = @mirror.subscriptions.insert
@@ -225,18 +230,9 @@ class TimelineController < ApplicationController
  			timeline_item = method.request_schema.new(timeline_item)
  		end
 
- 		if attachment_path && content_type
- 			media = Google::APIClient::UploadIO.new(attachment_path, content_type)
- 			parameters = { 'uploadType' => 'multipart' }
- 		else
- 			media = nil
- 			parameters = nil
- 		end
-
  		@result = @client.execute!(
  			api_method: method,
- 			body_object: timeline_item,
- 			parameters: parameters
+ 			body_object: timeline_item
  		).data
  	end
 
