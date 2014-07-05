@@ -9,8 +9,8 @@ class TimelineController < ApplicationController
   	credentials = User.get_credentials(session[:user_id])
 
   	data = {
-   		:client_id => ENV["GLASS_CLIENT_ID"],
-   		:client_secret => ENV["GLASS_CLIENT_SECRET"],
+   		:client_id => Rails.application.secrets.glass_client_id,
+   		:client_secret => Rails.application.secrets.glass_client_secret,
    		:refresh_token => credentials[:refresh_token],
    		:grant_type => "refresh_token"
 		}
@@ -39,7 +39,7 @@ class TimelineController < ApplicationController
       	"userToken" => session[:user_id],
       	"verifyToken" => "monkey",
 				"operation" => ["UPDATE"],
-				"callbackUrl" => ENV['HOSTNAME'] + '/update_dropcam_card'
+				"callbackUrl" => Rails.application.secrets.hostname + '/update_dropcam_card'
 			})
 
     	insert_timeline_item( {
@@ -94,8 +94,8 @@ class TimelineController < ApplicationController
     timelineID = params[:itemId]
 
   	data = {
-   		:client_id => ENV["GLASS_CLIENT_ID"],
-   		:client_secret => ENV["GLASS_CLIENT_SECRET"],
+   		:client_id => Rails.application.secrets.glass_client_id,
+   		:client_secret => Rails.application.secrets.glass_client_secret,
    		:refresh_token => credentials[:refresh_token],
    		:grant_type => "refresh_token"
 		}
@@ -154,7 +154,7 @@ class TimelineController < ApplicationController
   # Creates dropcam image
   def get_dropcam_info
 		require 'dropcam'
-  	dropcam = Dropcam::Dropcam.new(ENV["DROPCAM_USERNAME"],ENV["DROPCAM_PASSWORD"])
+  	dropcam = Dropcam::Dropcam.new(Rails.application.secrets.dropcam_username,Rails.application.secrets.dropcam_password)
   	camera = dropcam.cameras.third
 
 		# returns jpg image data of the latest frame captured
