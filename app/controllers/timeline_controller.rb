@@ -39,11 +39,15 @@ class TimelineController < ApplicationController
       	"userToken" => session[:user_id],
       	"verifyToken" => "monkey",
 				"operation" => ["UPDATE"],
-				"callbackUrl" => Rails.application.secrets.hostname + '/update_dropcam_card'
+				"callbackUrl" => Rails.application.secrets.callbackUrl + '/update_dropcam_card'
 			})
 
     	insert_timeline_item( {
-      	text: dropcam_info[:title] + " Dropcam",
+      	#text: dropcam_info[:title] + " Dropcam",
+				html: '<img
+								style="opacity: 0.5"
+								src="'+Rails.application.secrets.callbackUrl+'/assets/'+dropcam_info[:title]+'.jpg">
+							',
       	notification: { level: 'DEFAULT' },
       	sourceItemId: '1001',
       	menuItems: [
@@ -77,9 +81,9 @@ class TimelineController < ApplicationController
       	redirect_to(root_path, :alert => "Timelines failed to insert. Please try again.")
     	end
 
-    	if File.exist?(dropcam_info[:filename])
-      	File.delete(dropcam_info[:filename])
-    	end
+    	#if File.exist?(dropcam_info[:filename])
+      #	File.delete(dropcam_info[:filename])
+    	#end
     
   		else
     		Rails.logger.debug "No access token"
@@ -114,8 +118,12 @@ class TimelineController < ApplicationController
 			puts 'Mirror created'
     
     	update_timeline_item( {
-      	text: dropcam_info[:title] + " Dropcam",
-      	notification: { level: 'DEFAULT' },
+      	#text: dropcam_info[:title] + " Dropcam",
+				html: '<img
+								style="opacity: 0.5" 
+								src="'+Rails.application.secrets.callbackUrl+'/assets/'+dropcam_info[:title]+'.jpg">
+							',      	
+				notification: { level: 'DEFAULT' },
       	sourceItemId: '1001',
       	menuItems: [
         	{ 
@@ -144,9 +152,9 @@ class TimelineController < ApplicationController
 				"image/jpeg"
 				)
 
-    	if File.exist?(dropcam_info[:filename])
-      	File.delete(dropcam_info[:filename])
-    	end
+    	#if File.exist?(dropcam_info[:filename])
+      #	File.delete(dropcam_info[:filename])
+    	#end
   	end
   end
 
@@ -191,8 +199,8 @@ class TimelineController < ApplicationController
  		@result = @client.execute!(
  			api_method: method,
  			body_object: timeline_item,
- 			media: media,
- 			parameters: parameters
+ 			#media: media,
+ 			#parameters: parameters
  		).data
 
  	end
@@ -211,13 +219,13 @@ class TimelineController < ApplicationController
  			media = nil
  		end
 
-		parameters = { 'id' => timelineID, 'uploadType' => 'multipart' }
+		parameters = { 'id' => timelineID }
 
  		@result = @client.execute!(
  			api_method: method,
  			body_object: timeline_item,
- 			media: media,
- 			parameters: parameters
+ 			#media: media,
+ 			#parameters: parameters
  		).data
 
 	end
