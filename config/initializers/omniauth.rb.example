@@ -1,5 +1,5 @@
 Rails.application.config.middleware.use OmniAuth::Builder do
-provider :google_oauth2, Rails.application.secrets.glass_client_id, Rails.application.secrets.glass_clien_secret, {
+provider :google_oauth2, Rails.application.secrets.glass_client_id, Rails.application.secrets.glass_client_secret, {
  access_type: 'offline',
  prompt: 'consent',
  scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/glass.timeline',
